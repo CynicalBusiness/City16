@@ -22,6 +22,7 @@ public class CityPlugin extends JavaPlugin {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onEnable(){
+		getLogger().info("Loading cities...");
 		try {
 			Object citiesObject = ObjectHandler.deserializeFromPlugin(this, citiesFile);
 			ArrayList<?> list = (ArrayList<?>) citiesObject;
@@ -37,7 +38,12 @@ public class CityPlugin extends JavaPlugin {
 	
 	@Override
 	public void onDisable(){
-		
+		getLogger().info("Saving cities...");
+		try {
+			ObjectHandler.serializeToPlugin(this, citiesFile, cities);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public City getCity(UUID id){
