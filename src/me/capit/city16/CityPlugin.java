@@ -19,10 +19,19 @@ public class CityPlugin extends JavaPlugin {
 	private ConfigurationSection defaults;
 	private List<City> cities;
 	
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	public void onEnable(){
-		getLogger().info("Loading cities...");
+		load();
+	}
+	
+	@Override
+	public void onDisable(){
+		save();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void load(){
 		try {
 			Object citiesObject = ObjectHandler.deserializeFromPlugin(this, citiesFile);
 			ArrayList<?> list = (ArrayList<?>) citiesObject;
@@ -36,9 +45,7 @@ public class CityPlugin extends JavaPlugin {
 		}
 	}
 	
-	@Override
-	public void onDisable(){
-		getLogger().info("Saving cities...");
+	public void save(){
 		try {
 			ObjectHandler.serializeToPlugin(this, citiesFile, cities);
 		} catch (IOException e) {
