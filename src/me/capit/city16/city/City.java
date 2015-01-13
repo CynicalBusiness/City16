@@ -5,13 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Location;
+
 import me.capit.city16.CityPlugin;
 import me.capit.city16.player.CityPlayer;
 
 public class City implements Serializable {
 	private static final long serialVersionUID = -4636309141335506889L;
 
-	public transient final long debugID = System.currentTimeMillis();
+	public static transient final long debugID = System.currentTimeMillis();
 	
 	public final UUID ID;
 	public final List<District> districts;
@@ -19,12 +21,12 @@ public class City implements Serializable {
 	public UUID defaultDistrict, defaultGroup;
 	public String name,desc;
 	
-	public City(CityPlugin plugin, String name, CityPlayer owner){
+	public City(CityPlugin plugin, String name, CityPlayer owner, UUID world){
 		ID = UUID.randomUUID();
 		this.name = name;
 		
 		districts = new ArrayList<District>();
-		District def = new District(this, "Default");
+		District def = new District(this, "Default", world);
 		defaultDistrict = def.ID;
 		districts.add(def);
 		
@@ -42,8 +44,25 @@ public class City implements Serializable {
 		for (District d : districts) if (d.ID.equals(id)) return d;
 		return null;
 	}
+	public District getDistrict(Location loc){
+		for (District dist : districts) if (dist.hasTerritory(loc)) return dist;
+		return null;
+	}
+	
+	public boolean hasDistrict(UUID id){
+		return getDistrict(id)!=null;
+	}
+	public boolean hasDistrict(Location loc){
+		return getDistrict(loc)!=null;
+	}
+	
 	public District getDefaultDistrict(){
 		return getDistrict(defaultDistrict);
+	}
+	public List<District> getDistrictsInWorld(UUID wid){
+		List<District> dists = new ArrayList<District>();
+		for (District d : districts) if (d.world.equals(wid)) dists.add(d);
+		return dists;
 	}
 	
 	// GROUPS --------------------------------------------------------

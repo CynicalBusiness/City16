@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Location;
+
 public class Territory implements Serializable {
 	private static final long serialVersionUID = -6306417376625096692L;
 	
@@ -22,5 +24,11 @@ public class Territory implements Serializable {
 		this.world = world;
 		this.x = x; this.z = z;
 		fortifications = new ArrayList<Fortification>();
+	}
+	
+	public Fortification getFortification(Location loc){
+		for (Fortification fort : fortifications) 
+			if (fort.x==loc.getBlockX() && fort.y==loc.getBlockY() && fort.z==loc.getBlockZ()) return fort;
+		return null;
 	}
 }
