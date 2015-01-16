@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-
 import me.capit.city16.CityPlugin;
 import me.capit.city16.player.CityPlayer;
 import me.capit.eapi.data.Child;
@@ -46,6 +44,7 @@ public class Group extends DataModel {
 	}
 	
 	public void removePlayer(UUID player){
-		
+		for (int i = 0; i<size(); i++)
+			if (getPlayerIDs().get(i).equals(player)) removeChild(i);
 	}
 }
