@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 
+import me.capit.city16.CityPlugin;
 import me.capit.city16.player.CityPlayer;
 import me.capit.eapi.data.Child;
 import me.capit.eapi.data.DataModel;
@@ -21,7 +22,7 @@ public class Group extends DataModel {
 	
 	public List<CityPlayer> getPlayers(){
 		List<CityPlayer> players = new ArrayList<CityPlayer>();
-		for (UUID id : getPlayerIDs()) players.add(Bukkit.getServer().getPlayer(id));
+		for (UUID id : getPlayerIDs()) players.add(CityPlugin.getPlayer(id));
 		return players;
 	}
 	
@@ -34,5 +35,17 @@ public class Group extends DataModel {
 			}
 		}
 		return ids;
+	}
+	
+	public void addPlayer(CityPlayer player){
+		addPlayer(player.playerID);
+	}
+	
+	public void addPlayer(UUID player){
+		addChild(new ObjectValue<UUID>("player", player));
+	}
+	
+	public void removePlayer(UUID player){
+		
 	}
 }

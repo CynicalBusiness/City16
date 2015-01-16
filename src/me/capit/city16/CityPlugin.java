@@ -10,8 +10,10 @@ import me.capit.city16.player.CityPlayer;
 import me.capit.eapi.DataHandler;
 import me.capit.eapi.data.Child;
 import me.capit.eapi.data.DataFile;
+import me.capit.eapi.data.value.ObjectValue;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class CityPlugin extends JavaPlugin {
@@ -19,8 +21,8 @@ public class CityPlugin extends JavaPlugin {
 	public static final String playersFile = "players";
 	
 	private ConfigurationSection defaults;
-	private DataFile file;
-	private DataFile players;
+	private static DataFile file;
+	private static DataFile players;
 	
 	
 	@Override
@@ -51,17 +53,26 @@ public class CityPlugin extends JavaPlugin {
 		}
 	}
 	
-	public CityPlayer getPlayer(UUID id){
-		
+	public static CityPlayer getPlayer(UUID id){
+		for (Child child : players.getChildren()){
+			@SuppressWarnings("unchecked")
+			ObjectValue<CityPlayer> pval = (ObjectValue<CityPlayer>) child;
+			if (pval.getValue().playerID.equals(id)) return pval.getValue();
+		}
+		return null;
 	}
 	
-	public List<City> getCities(){
+	public static void addPlayer(Player player){
+		players.addChild(new ObjectValue<CityPlayer>("player", new CityPlayer(player)));
+	}
+	
+	public static List<City> getCities(){
 		List<City> cities = new ArrayList<City>();
 		for (Child child : file.getChildren()) if (child instanceof City) cities.add((City) child);
 		return cities;
 	}
 	
-	public City getCity(UUID id){
+	public static City getCity(UUID id){
 		for (City city : getCities()) if (city.getUniqueID().equals(id)) return city;
 		return null;
 	}
