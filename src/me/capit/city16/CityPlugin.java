@@ -1,23 +1,26 @@
 package me.capit.city16;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import me.capit.city16.city.City;
-import me.capit.eapi.serialization.ObjectHandler;
+import me.capit.city16.player.CityPlayer;
+import me.capit.eapi.DataHandler;
+import me.capit.eapi.data.Child;
+import me.capit.eapi.data.DataFile;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class CityPlugin extends JavaPlugin {
 	public static final String citiesFile = "cities";
+	public static final String playersFile = "players";
 	
 	private ConfigurationSection defaults;
-	private List<City> cities;
+	private DataFile file;
+	private DataFile players;
 	
 	
 	@Override
@@ -30,31 +33,36 @@ public class CityPlugin extends JavaPlugin {
 		save();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void load(){
 		try {
-			Object citiesObject = ObjectHandler.deserializeFromPlugin(this, citiesFile);
-			ArrayList<?> list = (ArrayList<?>) citiesObject;
-			cities = (ArrayList<City>) list;
-		} catch (FileNotFoundException e){
-			new File(getDataFolder(), citiesFile+"."+ObjectHandler.extension);
-			cities = new ArrayList<City>();
-		} catch (ClassNotFoundException | IOException e) {
+			file = DataHandler.loadFile(this, citiesFile);
+			players = DataHandler.loadFile(this, playersFile);
+		} catch (ClassNotFoundException | ClassCastException | IOException e) {
 			e.printStackTrace();
-			this.setEnabled(false);
 		}
 	}
 	
 	public void save(){
 		try {
-			ObjectHandler.serializeToPlugin(this, citiesFile, cities);
+			file.save(this);
+			players.save(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	public CityPlayer getPlayer(UUID id){
+		
+	}
+	
+	public List<City> getCities(){
+		List<City> cities = new ArrayList<City>();
+		for (Child child : file.getChildren()) if (child instanceof City) cities.add((City) child);
+		return cities;
+	}
+	
 	public City getCity(UUID id){
-		for (City city : cities) if (city.ID.equals(id)) return city;
+		for (City city : getCities()) if (city.getUniqueID().equals(id)) return city;
 		return null;
 	}
 }

@@ -1,23 +1,38 @@
 package me.capit.city16.city;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import me.capit.city16.player.CityPlayer;
+import org.bukkit.Bukkit;
 
-public class Group implements Serializable {
+import me.capit.city16.player.CityPlayer;
+import me.capit.eapi.data.Child;
+import me.capit.eapi.data.DataModel;
+import me.capit.eapi.data.value.ObjectValue;
+
+public class Group extends DataModel {
 	private static final long serialVersionUID = 1729482110019256483L;
-	public final UUID ID;
-	public final City city;
-	public final List<CityPlayer> players;
 	public String name;
 	
-	public Group(City city, String name){
-		ID = UUID.randomUUID();
-		players = new ArrayList<CityPlayer>();
-		this.city = city;
-		this.name = name;
+	public Group(String name){
+		super(name);
+	}
+	
+	public List<CityPlayer> getPlayers(){
+		List<CityPlayer> players = new ArrayList<CityPlayer>();
+		for (UUID id : getPlayerIDs()) players.add(Bukkit.getServer().getPlayer(id));
+		return players;
+	}
+	
+	public List<UUID> getPlayerIDs(){
+		List<UUID> ids = new ArrayList<UUID>();
+		for (Child child : getChildren()){
+			if (child instanceof ObjectValue){
+				@SuppressWarnings("unchecked") ObjectValue<UUID> player = (ObjectValue<UUID>) child;
+				ids.add(player.getValue());
+			}
+		}
+		return ids;
 	}
 }

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 public class CityPlayer implements Serializable {
 	private static final long serialVersionUID = 4903589010093251584L;
@@ -12,12 +12,12 @@ public class CityPlayer implements Serializable {
 	public final UUID playerID;
 	private int power;
 	
-	public CityPlayer(OfflinePlayer player){
+	public CityPlayer(Player player){
 		playerID = player.getUniqueId();
 	}
 	
-	public OfflinePlayer getPlayer(){
-		return Bukkit.getServer().getOfflinePlayer(playerID);
+	public Player getPlayer(){
+		return Bukkit.getServer().getPlayer(playerID);
 	}
 	
 	public int getPower(){
