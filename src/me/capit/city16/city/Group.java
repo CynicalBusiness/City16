@@ -2,49 +2,43 @@ package me.capit.city16.city;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import me.capit.city16.CityPlugin;
+import me.capit.city16.city.fortification.FortificationModel;
 import me.capit.city16.player.CityPlayer;
 import me.capit.eapi.data.Child;
 import me.capit.eapi.data.DataModel;
-import me.capit.eapi.data.value.ObjectValue;
 
 public class Group extends DataModel {
 	private static final long serialVersionUID = 1729482110019256483L;
-	public String name;
+	
+	private FortificationModel fortifications;
 	
 	public Group(String name){
 		super(name);
+		fortifications = new FortificationModel();
+	}
+	
+	public Group(String name, CityPlayer... players){
+		super(name, players);
+	}
+	
+	@Override
+	public void addChild(Child player){
+		if (player instanceof CityPlayer) super.addChild(player);
+	}
+	
+	@Override
+	public CityPlayer findFirstChild(String name){
+		return (CityPlayer) super.findFirstChild(name);
 	}
 	
 	public List<CityPlayer> getPlayers(){
 		List<CityPlayer> players = new ArrayList<CityPlayer>();
-		for (UUID id : getPlayerIDs()) players.add(CityPlugin.getPlayer(id));
+		for (Child c : getChildren()) if (c instanceof CityPlayer) players.add((CityPlayer) c);
 		return players;
 	}
 	
-	public List<UUID> getPlayerIDs(){
-		List<UUID> ids = new ArrayList<UUID>();
-		for (Child child : getChildren()){
-			if (child instanceof ObjectValue){
-				@SuppressWarnings("unchecked") ObjectValue<UUID> player = (ObjectValue<UUID>) child;
-				ids.add(player.getValue());
-			}
-		}
-		return ids;
-	}
-	
-	public void addPlayer(CityPlayer player){
-		addPlayer(player.playerID);
-	}
-	
-	public void addPlayer(UUID player){
-		addChild(new ObjectValue<UUID>("player", player));
-	}
-	
-	public void removePlayer(UUID player){
-		for (int i = 0; i<size(); i++)
-			if (getPlayerIDs().get(i).equals(player)) removeChild(i);
+	public FortificationModel getFortifications(){
+		return fortifications;
 	}
 }

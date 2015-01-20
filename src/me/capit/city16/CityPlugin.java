@@ -12,7 +12,6 @@ import me.capit.eapi.data.Child;
 import me.capit.eapi.data.DataFile;
 import me.capit.eapi.data.value.ObjectValue;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,10 +19,9 @@ public class CityPlugin extends JavaPlugin {
 	public static final String citiesFile = "cities";
 	public static final String playersFile = "players";
 	
-	private ConfigurationSection defaults;
+	private static DataFile defaults;
 	private static DataFile file;
 	private static DataFile players;
-	
 	
 	@Override
 	public void onEnable(){
@@ -57,7 +55,7 @@ public class CityPlugin extends JavaPlugin {
 		for (Child child : players.getChildren()){
 			@SuppressWarnings("unchecked")
 			ObjectValue<CityPlayer> pval = (ObjectValue<CityPlayer>) child;
-			if (pval.getValue().playerID.equals(id)) return pval.getValue();
+			if (pval.getValue().getUniqueID().equals(id)) return pval.getValue();
 		}
 		return null;
 	}

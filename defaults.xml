@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<defaults>
+    <default-meta description="&amp;oDefault City Description" district="default" group="default" admin-group="default"/>
+    <groups max-amount="0" max-players-per-group="0"/>
+    <fortifications enabled="true">
+        <fortification material="STONE:0" value="16"/>
+        <fortification material="OBSIDIAN" value="32"/>
+        <fortification material="LEATHER|IRON_INGOT|!concrete" value="64"/>
+        <fortification material="!steel|GOLD_INGOT" value="128"/>
+        <fortification material="!rebar|DIAMOND" value="256"/>
+        <fortification material="!steel_frame" value="512"/>
+        <fortification material="!diamond_frame" value="1024"/>
+    </fortifications>
+</defaults>
